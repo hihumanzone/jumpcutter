@@ -118,8 +118,6 @@ module.exports = env => {
       popup: './src/entry-points/popup/main.ts',
       background: './src/entry-points/background/main.ts',
       options: './src/entry-points/options/main.ts',
-
-      'local-file-player': './src/entry-points/local-file-player/main.ts',
     },
 
     output: {
@@ -223,7 +221,6 @@ module.exports = env => {
           { context: 'src', from: 'icons/(icon.svg-64.png|icon-disabled.svg-64.png|icon-only-sounded.svg-64.png|icon.svg-128.png|icon-disabled.svg-128.png|icon-only-sounded.svg-128.png|icon-big-padded.svg-128.png)' },
           { context: 'src/entry-points', from: 'popup/*.(html|css)', to: 'popup/[name][ext]' },
           { context: 'src/entry-points', from: 'options/*.(html|css)', to: 'options/[name][ext]' },
-          { context: 'src/entry-points', from: 'local-file-player/*.(html|css)', to: 'local-file-player/[name][ext]' },
         ],
       }),
       new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)({

@@ -21,7 +21,6 @@
 import { enabledSettingDefaultValue, OppositeDayMode } from './';
 import type { Settings } from './';
 import { ControllerKind } from './ControllerKind';
-import { HotkeyAction } from '@/hotkeys';
 import { getGeckoLikelyMaxNonMutedPlaybackRate } from '@/helpers';
 import { browserHasAudioDesyncBug } from '@/helpers/browserHasAudioDesyncBug';
 
@@ -87,101 +86,7 @@ export const defaultSettings: Readonly<Settings> = {
   dontAttachToCrossOriginMedia: true,
 
   enableHotkeys: false,  // Disable hotkeys for simplified extension
-  // TODO some code here is pretty WET, like duplicate hotkeys. DRY?
-  hotkeys: [
-    // Rewind/advance +
-    {
-      keyCombination: { code: 'KeyX', },
-      action: HotkeyAction.REWIND,
-      actionArgument: 5,
-    },
-    {
-      keyCombination: { code: 'KeyC', },
-      overrideWebsiteHotkeys: true, // Because on YouTube "C" toggles subtitles.
-      action: HotkeyAction.ADVANCE,
-      actionArgument: 5,
-    },
-
-    // soundedSpeed
-    {
-      keyCombination: { code: 'KeyS', },
-      action: HotkeyAction.DECREASE_SOUNDED_SPEED,
-      actionArgument: 0.25,
-    },
-    {
-      keyCombination: { code: 'KeyD', },
-      action: HotkeyAction.INCREASE_SOUNDED_SPEED,
-      actionArgument: 0.25,
-    },
-    {
-      keyCombination: { code: 'KeyA', },
-      action: HotkeyAction.TOGGLE_SOUNDED_SPEED,
-      actionArgument: 1,
-    },
-
-    // silenceSpeed
-    {
-      keyCombination: { code: 'KeyS', modifiers: ['shiftKey'], },
-      action: HotkeyAction.DECREASE_SILENCE_SPEED,
-      actionArgument: 0.25,
-    },
-    {
-      keyCombination: { code: 'KeyD', modifiers: ['shiftKey'], },
-      action: HotkeyAction.INCREASE_SILENCE_SPEED,
-      actionArgument: 0.25,
-    },
-    {
-      keyCombination: { code: 'KeyA', modifiers: ['shiftKey'], },
-      action: HotkeyAction.TOGGLE_SILENCE_SPEED,
-      actionArgument: 2.5,
-    },
-
-    // volumeThreshold
-    {
-      keyCombination: { code: 'KeyW', },
-      action: HotkeyAction.DECREASE_VOLUME_THRESHOLD,
-      actionArgument: 0.001,
-    },
-    {
-      keyCombination: { code: 'KeyE', },
-      action: HotkeyAction.INCREASE_VOLUME_THRESHOLD,
-      actionArgument: 0.001,
-    },
-    {
-      keyCombination: { code: 'KeyQ', },
-      action: HotkeyAction.TOGGLE_VOLUME_THRESHOLD,
-      actionArgument: 0,
-    },
-    {
-      keyCombination: { code: 'KeyW', modifiers: ['shiftKey'], },
-      action: HotkeyAction.DECREASE_VOLUME_THRESHOLD,
-      actionArgument: 0.010,
-    },
-    {
-      keyCombination: { code: 'KeyE', modifiers: ['shiftKey'], },
-      action: HotkeyAction.INCREASE_VOLUME_THRESHOLD,
-      actionArgument: 0.010,
-    },
-
-    // In case you coulnd't make it out. Practically turns on/off the extension. Why not actually turn it on/off?
-    // Because
-    // * We don't have such a hotkey action yet.
-    // * Hotkeys would also cease to work if we'd disable it.
-    // * It would create an audio glitch (at best), at worst it would remove/add audio delay (becaouse of how
-    // marginBefore) works.
-    // * It's computationally heavy.
-    // TODO these problems sound like then can be solved.
-    {
-      keyCombination: { code: 'KeyZ', },
-      action: HotkeyAction.TOGGLE_VOLUME_THRESHOLD,
-      actionArgument: 0,
-    },
-    {
-      keyCombination: { code: 'KeyZ', },
-      action: HotkeyAction.SET_SOUNDED_SPEED,
-      actionArgument: 1,
-    },
-  ],
+  hotkeys: [],
 
   popupDisableHotkeysWhileInputFocused: true,
   popupAutofocusEnabledInput: false,
@@ -223,32 +128,7 @@ export const defaultSettings: Readonly<Settings> = {
   popupMarginAfterMax: 0.5,
   popupMarginAfterStep: 0.010,
 
-  popupSpecificHotkeys: [
-    {
-      keyCombination: { code: 'Space', },
-      action: HotkeyAction.TOGGLE_PAUSE,
-    },
-    {
-      keyCombination: { code: 'ArrowLeft' },
-      action: HotkeyAction.REWIND,
-      actionArgument: 5,
-    },
-    {
-      keyCombination: { code: 'ArrowRight' },
-      action: HotkeyAction.ADVANCE,
-      actionArgument: 5,
-    },
-    {
-      keyCombination: { code: 'ArrowUp' },
-      action: HotkeyAction.INCREASE_VOLUME,
-      actionArgument: 5,
-    },
-    {
-      keyCombination: { code: 'ArrowDown' },
-      action: HotkeyAction.DECREASE_VOLUME,
-      actionArgument: 5,
-    },
-  ],
+  popupSpecificHotkeys: [],
 
   timeSavedAveragingMethod: 'exponential',
   timeSavedAveragingWindowLength: 600,
