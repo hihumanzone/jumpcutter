@@ -13,6 +13,8 @@ Download:
 or from GitHub: [Chromium](https://github.com/WofWca/jumpcutter/releases/latest/download/lmppdpldfpfdlipofacekcfleacbbncp_main.crx
 ) / [Gecko (Firefox)](https://github.com/WofWca/jumpcutter/releases/latest/download/jump_cutter.xpi)
 
+**Building from source**: See [Extension Installation Guide](EXTENSION_INSTALL_GUIDE.md) for instructions on building and installing the extension locally.
+
 Skips silent parts in videos, in real time.
 
 Can be useful for watching lectures, stream recordings (VODs), webinars, podcasts, and other unedited videos.

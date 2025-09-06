@@ -23,7 +23,7 @@ import {
   Settings, getSettings, setSettings, addOnStorageChangedListener, MyStorageChanges, ControllerKind,
   removeOnStorageChangedListener, settingsChanges2NewValues,
 } from '@/settings';
-import { clamp, assertNever, assertDev } from '@/helpers';
+import { assertNever, assertDev } from '@/helpers';
 import { isSourceCrossOrigin, requestIdleCallbackPolyfill } from '@/entry-points/content/helpers';
 import type ElementPlaybackControllerStretching from
   './ElementPlaybackControllerStretching/ElementPlaybackControllerStretching';
@@ -63,8 +63,10 @@ export type TelemetryMessage =
   };
 
 function executeNonSettingsActions(
-  el: HTMLMediaElement,
-  nonSettingsActions: never[]
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _el: HTMLMediaElement,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _nonSettingsActions: never[]
 ) {
   // Hotkeys disabled in simplified extension - no actions to execute
 }
