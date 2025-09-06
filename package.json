@@ -20,6 +20,7 @@
     "build-and-package:gecko": "BROWSER=gecko yarn run _abstract-build-and-package",
     "build-and-package:chromium": "BROWSER=chromium yarn run _abstract-build-and-package",
     "build-and-package:all": "rm -f dist-*.zip && yarn run build-and-package:gecko & yarn run build-and-package:chromium",
+    "package": "yarn run build-and-package:all",
     "_abstract-serve": "webpack --mode=development --watch",
     "serve:gecko": "yarn run _abstract-serve --env browser=gecko",
     "serve:chromium": "yarn run _abstract-serve --env browser=chromium",
