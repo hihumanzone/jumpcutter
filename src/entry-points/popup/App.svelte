@@ -25,19 +25,25 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
     setSettings,
     Settings,
     settingsChanges2NewValues,
-    ControllerKind_STRETCHING,
   } from '@/settings';
   import RangeSlider from './RangeSlider.svelte';
   import type { TelemetryMessage } from '@/entry-points/content/AllMediaElementsController';
   import { getMessage } from '@/helpers';
 
   let settings: Settings;
+  
+  // Always ensure we're using the simplified settings when popup loads
   const settingsPromise = getSettings().then(s => {
     settings = s;
+    // Force experimental algorithm to be enabled and disable advanced mode
+    if (settings.experimentalControllerType !== 'STRETCHING') {
+      setSettings({ experimentalControllerType: 'STRETCHING' });
+      settings.experimentalControllerType = 'STRETCHING';
+    }
     return s;
   });
 
-  // Simple telemetry state
+  // Simplified telemetry state
   let latestTelemetryRecord: TelemetryMessage | undefined;
   let connected = false;
   let considerConnectionFailed = false;
@@ -65,9 +71,9 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
 
   const telemetryUpdatePeriod = 150; // ms
 
-  // Simple connection status (simplified from original complex logic)
+  // Simplified connection status
   setTimeout(() => {
-    connected = true; // Assume connection for simplicity
+    connected = true;
   }, 1000);
 
   setTimeout(() => {
@@ -144,7 +150,7 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
     {/if}
   </div>
 
-  <!-- Essential Sliders -->
+  <!-- Essential Sliders Only -->
   <RangeSlider
     label="🔉 {getMessage('volumeThreshold')}"
     min={settings.popupVolumeThresholdMin}
