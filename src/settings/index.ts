@@ -18,8 +18,12 @@
  * along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { HotkeyBinding } from '@/hotkeys';
 import { ControllerKind } from './ControllerKind';
+
+// Simplified hotkey binding for compatibility (hotkeys disabled)
+interface HotkeyBinding {
+  // Empty placeholder since hotkeys are disabled
+}
 
 // It is impossible to explicitly set `experimentalControllerType` to `ControllerKind.ALWAYS_SOUNDED`.
 // See `AllMediaElementsController.ts`.
