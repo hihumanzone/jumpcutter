@@ -20,70 +20,44 @@
 
 import { ControllerKind } from './ControllerKind';
 
-// It is impossible to explicitly set `experimentalControllerType` to `ControllerKind.ALWAYS_SOUNDED`.
-// See `AllMediaElementsController.ts`.
-type SettingsControllerKind = Exclude<ControllerKind, ControllerKind.ALWAYS_SOUNDED>;
-
-export interface Settings {
+/**
+ * Simplified settings interface for the stripped-down extension.
+ * Only includes essential settings for basic functionality.
+ */
+export interface SimpleSettings {
   // Core functionality
+  enabled: boolean,
+  
+  // Essential audio settings
   volumeThreshold: number,
   soundedSpeed: number,
-  enabled: boolean,
   marginBefore: number,
   marginAfter: number,
-
-  // Fixed to use experimental algorithm only
-  experimentalControllerType: SettingsControllerKind,
-
-  // Keep minimal compatibility settings (but simplified)
-  silenceSpeedSpecificationMethod: 'relativeToSoundedSpeed' | 'absolute',
-  silenceSpeedRaw: number,
   
-  // Essential UI settings for popup
+  // Fixed algorithm - always use stretching (experimental)
+  experimentalControllerType: ControllerKind.STRETCHING,
+  
+  // UI settings for popup
   popupChartWidthPx: number,
   popupChartHeightPx: number,
   popupChartLengthInSeconds: number,
   popupChartJumpPeriod: number,
   popupChartSpeed: 'realTime' | 'intrinsicTime' | 'soundedSpeedTime',
-
+  
   // Slider ranges for UI
   popupVolumeThresholdMin: number,
   popupVolumeThresholdMax: number,
   popupVolumeThresholdStep: number,
-
+  
   popupSoundedSpeedMin: number,
   popupSoundedSpeedMax: number,
   popupSoundedSpeedStep: number,
-
+  
   popupMarginBeforeMin: number,
   popupMarginBeforeMax: number,
   popupMarginBeforeStep: number,
-
+  
   popupMarginAfterMin: number,
   popupMarginAfterMax: number,
   popupMarginAfterStep: number,
-
-  // Keep minimal internal settings for migration compatibility
-  __lastHandledUpdateToVersion?: `${number}.${number}.${number}`,
 }
-
-// Removed OppositeDayMode - not needed with simplified extension
-
-// https://developer.chrome.com/apps/storage#property-onChanged-changes
-export type MyStorageChanges = {
-  [P in keyof Settings]?: {
-    newValue?: Settings[P],
-    oldValue?: Settings[P],
-  }
-};
-
-export * from './enabledSettingDefaultValue';
-export * from './defaultSettings';
-export * from './getSettings';
-export * from './setSettings';
-export * from './ControllerKind';
-export * from './getAbsoluteClampedSilenceSpeed';
-export * from './settingsChanges2NewValues';
-export * from './onChanged';
-export * from './localStorageOnlyKeys';
-export * from './filterOutLocalStorageOnlySettings';

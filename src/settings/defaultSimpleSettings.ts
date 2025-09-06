@@ -18,45 +18,43 @@
  * along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { enabledSettingDefaultValue } from './';
-import type { Settings } from './';
 import { ControllerKind } from './ControllerKind';
+import { SimpleSettings } from './SimpleSettings';
 
-export const defaultSettings: Readonly<Settings> = {
-  // Core functionality
-  volumeThreshold: 0.006, // Good balance for detecting speech vs silence  
+// Simple defaults focused on core functionality
+export const defaultSimpleSettings: Readonly<SimpleSettings> = {
+  // Core functionality - extension starts enabled
+  enabled: true,
+  
+  // Essential audio settings with sensible defaults
+  volumeThreshold: 0.006, // Good balance for detecting speech vs silence
   soundedSpeed: 1.0,      // Normal speed for sounded parts
-  enabled: enabledSettingDefaultValue,
   marginBefore: 0,        // No margin before by default (less audio distortion)
   marginAfter: 0.1,       // Small margin after to avoid cutting off word endings
-
+  
   // Always use stretching algorithm (experimental)
   experimentalControllerType: ControllerKind.STRETCHING,
-
-  // Keep minimal compatibility settings
-  silenceSpeedSpecificationMethod: 'relativeToSoundedSpeed',
-  silenceSpeedRaw: 3.0,   // Reasonable default for silence speed
-
+  
   // Chart settings for sound visualization
   popupChartWidthPx: 400,
   popupChartHeightPx: 50,
   popupChartLengthInSeconds: 8,
   popupChartJumpPeriod: 0,
   popupChartSpeed: 'soundedSpeedTime',
-
-  // Slider ranges for popup UI
+  
+  // Slider ranges
   popupVolumeThresholdMin: 0,
   popupVolumeThresholdMax: 0.050,
   popupVolumeThresholdStep: 0.001,
-
+  
   popupSoundedSpeedMin: 0.25,
   popupSoundedSpeedMax: 4,
   popupSoundedSpeedStep: 0.05,
-
+  
   popupMarginBeforeMin: 0,
   popupMarginBeforeMax: 0.5,
   popupMarginBeforeStep: 0.010,
-
+  
   popupMarginAfterMin: 0,
   popupMarginAfterMax: 0.5,
   popupMarginAfterStep: 0.010,

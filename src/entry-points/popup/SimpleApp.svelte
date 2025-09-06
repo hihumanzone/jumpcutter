@@ -18,63 +18,89 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
 -->
 
 <script lang="ts">
+  import { browserOrChrome } from '@/webextensions-api-browser-or-chrome';
   import { onDestroy } from 'svelte';
   import {
-    addOnStorageChangedListener,
-    getSettings,
-    setSettings,
-    Settings,
-    settingsChanges2NewValues,
+    addOnStorageChangedListener, getSettings, setSettings, settingsChanges2NewValues,
     ControllerKind_STRETCHING,
   } from '@/settings';
+  import { SimpleSettings } from '@/settings/SimpleSettings';
+  import { defaultSimpleSettings } from '@/settings/defaultSimpleSettings';
   import RangeSlider from './RangeSlider.svelte';
   import type { TelemetryMessage } from '@/entry-points/content/AllMediaElementsController';
-  import { getMessage } from '@/helpers';
+  import { assertDev, getMessage } from '@/helpers';
 
-  let settings: Settings;
-  const settingsPromise = getSettings().then(s => {
-    settings = s;
-    return s;
+  let settings: SimpleSettings = { ...defaultSimpleSettings };
+  
+  const settingsPromise = getSettings().then(fullSettings => {
+    // Extract only the simple settings we care about
+    settings = {
+      enabled: fullSettings.enabled,
+      volumeThreshold: fullSettings.volumeThreshold,
+      soundedSpeed: fullSettings.soundedSpeed,
+      marginBefore: fullSettings.marginBefore,
+      marginAfter: fullSettings.marginAfter,
+      experimentalControllerType: ControllerKind_STRETCHING,
+      popupChartWidthPx: fullSettings.popupChartWidthPx,
+      popupChartHeightPx: fullSettings.popupChartHeightPx,
+      popupChartLengthInSeconds: fullSettings.popupChartLengthInSeconds,
+      popupChartJumpPeriod: fullSettings.popupChartJumpPeriod,
+      popupChartSpeed: fullSettings.popupChartSpeed,
+      popupVolumeThresholdMin: fullSettings.popupVolumeThresholdMin,
+      popupVolumeThresholdMax: fullSettings.popupVolumeThresholdMax,
+      popupVolumeThresholdStep: fullSettings.popupVolumeThresholdStep,
+      popupSoundedSpeedMin: fullSettings.popupSoundedSpeedMin,
+      popupSoundedSpeedMax: fullSettings.popupSoundedSpeedMax,
+      popupSoundedSpeedStep: fullSettings.popupSoundedSpeedStep,
+      popupMarginBeforeMin: fullSettings.popupMarginBeforeMin,
+      popupMarginBeforeMax: fullSettings.popupMarginBeforeMax,
+      popupMarginBeforeStep: fullSettings.popupMarginBeforeStep,
+      popupMarginAfterMin: fullSettings.popupMarginAfterMin,
+      popupMarginAfterMax: fullSettings.popupMarginAfterMax,
+      popupMarginAfterStep: fullSettings.popupMarginAfterStep,
+    };
+    return settings;
   });
 
-  // Simple telemetry state
-  let latestTelemetryRecord: TelemetryMessage | undefined;
+  // Telemetry for chart
+  let latestTelemetryRecord: TelemetryMessage = {
+    kind: 'telemetry',
+    element: undefined,
+    lastActualPlaybackRateChange: { name: 'SOUNDED', time: 0, value: 1 },
+    controllerType: ControllerKind_STRETCHING,
+    inputVolume: 0,
+    elementVolumeChange: { newValue: 1, oldValue: 1, timestamp: 0 },
+    outputVolume: 0,
+    maybeCanShowMutedElemInfo: false,
+    isErrored: false,
+    // ... other required fields with default values
+  } as TelemetryMessage;
+  
   let connected = false;
   let considerConnectionFailed = false;
+  let gotAtLeastOneContentStatusResponse = false;
 
   // Storage change listener
   const onStorageChanged = addOnStorageChangedListener(changes => {
     const newValues = settingsChanges2NewValues(changes);
-    if (settings) {
-      Object.assign(settings, newValues);
-    }
+    Object.assign(settings, newValues);
   });
   onDestroy(onStorageChanged);
 
   // Input change handler
-  function createOnInputListener<T extends keyof Settings>(settingName: T) {
+  function createOnInputListener<T extends keyof SimpleSettings>(settingName: T) {
     return () => {
+      // Update settings in storage
       setSettings({ [settingName]: settings[settingName] });
     };
   }
 
-  // Chart click handler
+  // Chart click handler (simplified)
   function onChartClick() {
-    // Basic chart interaction
+    // Basic chart interaction - could seek to clicked position
   }
 
   const telemetryUpdatePeriod = 150; // ms
-
-  // Simple connection status (simplified from original complex logic)
-  setTimeout(() => {
-    connected = true; // Assume connection for simplicity
-  }, 1000);
-
-  setTimeout(() => {
-    if (!connected) {
-      considerConnectionFailed = true;
-    }
-  }, 3000);
 </script>
 
 {#await settingsPromise then _}
@@ -121,25 +147,19 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
           ⏳ {getMessage('loading')}...
         </div>
       {:then { default: Chart }}
-        {#if latestTelemetryRecord}
-          <Chart
-            {latestTelemetryRecord}
-            volumeThreshold={settings.volumeThreshold}
-            loadedPromise={settingsPromise}
-            widthPx={settings.popupChartWidthPx}
-            heightPx={settings.popupChartHeightPx}
-            lengthSeconds={settings.popupChartLengthInSeconds}
-            jumpPeriod={settings.popupChartJumpPeriod}
-            timeProgressionSpeed={settings.popupChartSpeed}
-            soundedSpeed={settings.soundedSpeed}
-            on:click={onChartClick}
-            {telemetryUpdatePeriod}
-          />
-        {:else}
-          <div class="chart-placeholder">
-            Waiting for audio data...
-          </div>
-        {/if}
+        <Chart
+          {latestTelemetryRecord}
+          volumeThreshold={settings.volumeThreshold}
+          loadedPromise={settingsPromise}
+          widthPx={settings.popupChartWidthPx}
+          heightPx={settings.popupChartHeightPx}
+          lengthSeconds={settings.popupChartLengthInSeconds}
+          jumpPeriod={settings.popupChartJumpPeriod}
+          timeProgressionSpeed={settings.popupChartSpeed}
+          soundedSpeed={settings.soundedSpeed}
+          on:click={onChartClick}
+          {telemetryUpdatePeriod}
+        />
       {/await}
     {/if}
   </div>
@@ -195,6 +215,5 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
     min-width: var(--popupChartWidth);
     min-height: var(--popupChartHeight);
     background: rgb(calc(0.7 * 255), 255, calc(0.7 * 255));
-    border-radius: 4px;
   }
 </style>
